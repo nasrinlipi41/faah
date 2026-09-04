@@ -4,3 +4,4 @@ requests
 simple-websocket
 pymongo
 certifi
+flask-cors
