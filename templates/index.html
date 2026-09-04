@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinajpur Board Result Scraper 2026</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <div id="user-tier-badge" class="badge badge-guest">
+                <span class="badge-dot"></span>
+                <span id="tier-text">Guest Mode (Slow Speed)</span>
+            </div>
+            <div class="top-nav-actions">
+                <button id="admin-login-btn" class="btn btn-sm btn-outline">Admin Login</button>
+                <button id="admin-logout-btn" class="btn btn-sm btn-outline" style="display:none">Logout</button>
+            </div>
+        </div>
+
+        <header>
+            <h1>Dinajpur Board Result Scraper 2026</h1>
+            <p>SSC Exam Result Scraper for Dinajpur Education Board, Bangladesh</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tab-individual">Individual</button>
+            <button class="tab-btn" data-tab="tab-institute">Institute</button>
+            <button class="tab-btn" data-tab="tab-rolls">Roll Fetcher</button>
+            <button class="tab-btn" data-tab="tab-cookie">Cookie</button>
+            <button id="admin-tab-btn" class="tab-btn" data-tab="tab-admin" style="display:none">Admin Panel</button>
+        </div>
+
+        <!-- INDIVIDUAL ROLL TAB -->
+        <div id="tab-individual" class="tab-panel active">
+            <div class="card">
+                <form id="roll-form">
+                    <label for="roll-input">Roll Number(s)</label>
+                    <input type="text" id="roll-input" placeholder="e.g. 183653 183654 183655">
+                    <p style="font-size:0.8rem;color:var(--text-dim);margin-top:4px">Space, comma, or newline separated</p>
+                    <button type="submit" class="btn">Fetch Results</button>
+                </form>
+            </div>
+            <div id="roll-results"></div>
+        </div>
+
+        <!-- INSTITUTE TAB -->
+        <div id="tab-institute" class="tab-panel">
+            <div class="card">
+                <form id="institute-form">
+                    <label for="eiin-input">EIIN Number(s)</label>
+                    <input type="text" id="eiin-input" placeholder="e.g. 120524 120525 120526">
+                    <p style="font-size:0.8rem;color:var(--text-dim);margin-top:4px">Space, comma, or newline separated</p>
+                    <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+                        <button type="submit" class="btn" id="institute-submit">Start Scraping</button>
+                        <button type="button" class="btn btn-danger" id="cancel-btn" style="display:none">Cancel</button>
+                    </div>
+                </form>
+                <div id="institute-progress" class="progress-area">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                        <div class="progress-text" id="progress-text"></div>
+                    </div>
+                    <p class="status-line" id="institute-status"></p>
+                </div>
+            </div>
+            <div id="institute-results"></div>
+        </div>
+
+        <!-- ROLL FETCHER TAB -->
+        <div id="tab-rolls" class="tab-panel">
+            <div class="card">
+                <form id="rolls-form">
+                    <label for="rolls-eiin-input">EIIN Number(s)</label>
+                    <input type="text" id="rolls-eiin-input" placeholder="e.g. 120524 120525 120526">
+                    <p style="font-size:0.8rem;color:var(--text-dim);margin-top:4px">Space, comma, or newline separated</p>
+                    <button type="submit" class="btn">Fetch Rolls</button>
+                </form>
+            </div>
+            <div id="rolls-output"></div>
+        </div>
+
+        <!-- COOKIE TAB -->
+        <div id="tab-cookie" class="tab-panel">
+            <div class="card">
+                <label>Current Cookie</label>
+                <div class="cookie-status" id="cookie-current">Loading...</div>
+                <form id="cookie-form">
+                    <label for="cookie-input">Paste Cookie Header</label>
+                    <textarea id="cookie-input" placeholder="Paste your browser Cookie header here..."></textarea>
+                    <button type="submit" class="btn">Save Cookie</button>
+                </form>
+                <p class="status-line" id="cookie-msg" style="margin-top:8px;color:var(--green)"></p>
+                <div style="margin-top:16px;font-size:0.85rem;color:var(--text-dim)">
+                    <p><strong>How to get cookies:</strong></p>
+                    <ol style="padding-left:18px;margin-top:6px">
+                        <b>• For desktop browser:</b>
+                        <li>Open <a href="https://results.dinajpurboard.gov.bd/results" target="_blank" style="color:var(--accent)">results.dinajpurboard.gov.bd</a> in your browser</li>
+                        <li>Solve the captcha if prompted</li>
+                        <li>Open Developer Tools (F12) &rarr; Network tab</li>
+                        <li>Refresh the page and click on the first request</li>
+                        <li>Go to Headers section and copy the Cookie header value</li>
+                        <li>Paste it above</li>
+                    </ol>
+                    <ol style="padding-left:18px;margin-top:6px">
+                        <b>• For mobile browser:</b>
+                        <li>Use firefox or Kiwi browser</li>
+                        <li>Open the site</li>
+                        <li>Tap on the lock icon</li>
+                        <li>Go to cookies & copy all of them</li>
+                        <li>Paste it above</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADMIN PANEL TAB -->
+        <div id="tab-admin" class="tab-panel">
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+                    <h2 style="font-size:1.2rem;color:var(--accent)">👑 Admin Dashboard & Database Analytics</h2>
+                    <div style="display:flex;gap:8px">
+                        <button id="refresh-stats-btn" class="btn btn-sm">🔄 Refresh Data</button>
+                        <button id="clear-history-btn" class="btn btn-sm btn-danger">🗑️ Clear All History</button>
+                    </div>
+                </div>
+                <div id="db-status-bar" class="status-line" style="margin-bottom:16px"></div>
+
+                <div class="stats-overview-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Institutes Scraped</div>
+                        <div class="stat-value" id="stat-total-institutes">0</div>
+                        <div class="stat-sub">Today: <span id="stat-today-institutes">0</span></div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Students Scraped</div>
+                        <div class="stat-value" id="stat-total-students">0</div>
+                        <div class="stat-sub">Today: <span id="stat-today-students">0</span></div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Individual Rolls</div>
+                        <div class="stat-value" id="stat-total-rolls">0</div>
+                        <div class="stat-sub">Today: <span id="stat-today-rolls">0</span></div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Roll Fetcher Queries</div>
+                        <div class="stat-value" id="stat-total-fetches">0</div>
+                        <div class="stat-sub">Today: <span id="stat-today-fetches">0</span></div>
+                    </div>
+                </div>
+
+                <div class="summary" style="margin-top:16px">
+                    <h3 style="color:var(--accent);margin-bottom:8px">Activity Breakdown (Admin vs Guest)</h3>
+                    <div class="summary-grid">
+                        <div class="summary-item"><span>Admin Operations (All-Time):</span> <strong id="stat-admin-ops">0</strong></div>
+                        <div class="summary-item"><span>Admin Operations (Today):</span> <strong id="stat-today-admin-ops">0</strong></div>
+                        <div class="summary-item"><span>Guest Operations (All-Time):</span> <strong id="stat-guest-ops">0</strong></div>
+                        <div class="summary-item"><span>Guest Operations (Today):</span> <strong id="stat-today-guest-ops">0</strong></div>
+                    </div>
+                </div>
+
+                <div style="margin-top:24px">
+                    <h3 style="font-size:1.05rem;color:var(--text);margin-bottom:12px">📜 Recent Scraping History Log</h3>
+                    <div class="table-responsive">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>User</th>
+                                    <th>Type</th>
+                                    <th>Target / Details</th>
+                                    <th>Result Info</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body">
+                                <tr>
+                                    <td colspan="5" style="text-align:center;color:var(--text-dim)">Loading history...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Developed by <a href="https://facebook.com/ahnafsaikat08" target="_blank">Ahnaf Saikat</a> &middot; Powered by <a href="https://hscstack.site" target="_blank">HSCStack</a></p>
+        </footer>
+    </div>
+
+    <!-- ADMIN LOGIN MODAL -->
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Admin Authentication</h3>
+                <button id="modal-close-btn" class="modal-close">&times;</button>
+            </div>
+            <form id="admin-login-form">
+                <div style="margin-bottom:12px">
+                    <label for="admin-user-input">Username</label>
+                    <input type="text" id="admin-user-input" placeholder="Admin username" required autocomplete="username">
+                </div>
+                <div style="margin-bottom:12px">
+                    <label for="admin-pass-input">Password</label>
+                    <input type="password" id="admin-pass-input" placeholder="Admin password" required autocomplete="current-password">
+                </div>
+                <p id="admin-login-msg" class="msg-error" style="display:none"></p>
+                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px">
+                    <button type="button" id="modal-cancel-btn" class="btn btn-outline btn-sm">Cancel</button>
+                    <button type="submit" class="btn btn-sm">Sign In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
