@@ -13,6 +13,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 
 from flask import Flask, render_template, request, jsonify, session, send_file
+from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 import requests as req_lib
 
@@ -26,6 +27,7 @@ except ImportError:
 app = Flask(__name__)
 app.secret_key = os.urandom(24).hex()
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
