@@ -24,7 +24,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 async function checkAuthStatus() {
     try {
         const headers = adminToken ? {'X-Admin-Token': adminToken} : {};
-        const res = await fetch('${BACKEND_URL}/api/admin/status', {headers});
+        const res = await fetch("${BACKEND_URL}"+"/api/admin/status", {headers});
         const data = await res.json();
         isAdmin = !!data.is_admin;
         if (data.admin_token) {
@@ -89,7 +89,7 @@ document.getElementById('admin-login-form').addEventListener('submit', async (e)
     const msgEl = document.getElementById('admin-login-msg');
 
     try {
-        const resp = await fetch('${BACKEND_URL}/api/admin/login', {
+        const resp = await fetch("${BACKEND_URL}"+"/api/admin/login", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({username, password})
@@ -121,7 +121,7 @@ document.getElementById('admin-login-form').addEventListener('submit', async (e)
 
 document.getElementById('admin-logout-btn').addEventListener('click', async () => {
     try {
-        await fetch('${BACKEND_URL}/api/admin/logout', {method: 'POST'});
+        await fetch("${BACKEND_URL}"+"/api/admin/logout", {method: 'POST'});
         isAdmin = false;
         adminToken = null;
         sessionStorage.removeItem('admin_token');
@@ -143,7 +143,7 @@ async function loadAdminDashboard() {
 
     try {
         const headers = adminToken ? {'X-Admin-Token': adminToken} : {};
-        const resp = await fetch('${BACKEND_URL}/api/admin/stats', {headers});
+        const resp = await fetch("${BACKEND_URL}"+"/api/admin/stats", {headers});
         const data = await resp.json();
         if (!data.ok) {
             dbStatusBar.innerHTML = `<span class="msg-error">${data.message}</span>`;
@@ -226,7 +226,7 @@ document.getElementById('clear-history-btn').addEventListener('click', async () 
     try {
         const headers = {'Content-Type': 'application/json'};
         if (adminToken) headers['X-Admin-Token'] = adminToken;
-        const resp = await fetch('${BACKEND_URL}/api/admin/clear_history', {
+        const resp = await fetch("${BACKEND_URL}"+"/api/admin/clear_history", {
             method: 'POST',
             headers,
             body: JSON.stringify({admin_token: adminToken})
@@ -257,7 +257,7 @@ document.getElementById('roll-form').addEventListener('submit', async (e) => {
     try {
         const headers = {'Content-Type': 'application/json'};
         if (adminToken) headers['X-Admin-Token'] = adminToken;
-        const resp = await fetch('${BACKEND_URL}/api/roll', {
+        const resp = await fetch("${BACKEND_URL}"+"/api/roll", {
             method: 'POST',
             headers,
             body: JSON.stringify({rolls, admin_token: adminToken})
@@ -320,7 +320,7 @@ document.getElementById('rolls-form').addEventListener('submit', async (e) => {
     try {
         const headers = {'Content-Type': 'application/json'};
         if (adminToken) headers['X-Admin-Token'] = adminToken;
-        const resp = await fetch('${BACKEND_URL}/api/rolls_fetch', {
+        const resp = await fetch("${BACKEND_URL}"+"/api/rolls_fetch", {
             method: 'POST',
             headers,
             body: JSON.stringify({eiin, admin_token: adminToken})
@@ -478,7 +478,7 @@ socket.on('scrape_cancelled', (data) => {
 
 // ─── COOKIE ───
 async function loadCookie() {
-    const resp = await fetch('${BACKEND_URL}/api/cookie');
+    const resp = await fetch("${BACKEND_URL}"+"/api/cookie");
     const data = await resp.json();
     document.getElementById('cookie-current').textContent = data.cookie || 'No cookie saved.';
 }
@@ -487,7 +487,7 @@ document.getElementById('cookie-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const cookie = document.getElementById('cookie-input').value.trim();
     if (!cookie) return;
-    const resp = await fetch('${BACKEND_URL}/api/cookie', {
+    const resp = await fetch("${BACKEND_URL}"+"/api/cookie", {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({cookie})
